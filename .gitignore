@@ -1,6 +1,7 @@
 **/.exercism
 **/node_modules
 .eslintrc
+.vscode
 babel.config.js
 package-lock.json
 package.json
