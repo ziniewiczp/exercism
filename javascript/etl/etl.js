@@ -1,11 +1,9 @@
 export const transform = (old) => {
-  const expected = {};
+  return Object.entries(old).reduce((expected, [score, letters]) => {
+    letters.forEach(letter => {
+      expected[letter.toLowerCase()] = +score;
+    });
 
-  for(let row in old) {
-    for(let letter of old[row]) {
-      expected[letter.toLowerCase()] = +row;
-    }
-  }
-
-  return expected;
-};
+    return expected;
+  }, {});
+}
