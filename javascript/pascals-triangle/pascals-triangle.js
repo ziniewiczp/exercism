@@ -13,6 +13,6 @@ export class Triangle {
   }
 
   get lastRow() {
-    return this.rows.pop();
+    return this.rows[this.rows.length - 1];
   }
 }
