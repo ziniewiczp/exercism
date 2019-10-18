@@ -1,38 +1,26 @@
 export class Diamond {
   makeDiamond(letter) {
-    const finalLetterChar = letter.charCodeAt(0);
-    let currentChar = "A".charCodeAt(0);
-    let spacing = -1;
-    let direction = 1;
+    if(letter === "A") return "A\n";
 
-    const result = new Array();
-    while(currentChar > 64) {
-      let row = "";
-      let margin = finalLetterChar - currentChar;
-      for(let i = 0; i < margin; i++) {
-        row += " ";
+    const height = letter.charCodeAt(0) - "A".charCodeAt(0);
+    const topPart = new Array(height).fill().map((_, index) => {
+      let row = " ".repeat(height - index)
+        + String.fromCharCode(index + 65);
+
+      if(index > 0) {
+        row += " ".repeat(2*index - 1) 
+        + String.fromCharCode(index + 65);
       }
 
-      row += String.fromCharCode(currentChar);
+      return row + " ".repeat(height - index);
+    });
 
-      if(currentChar !== 65) {
-        for(let i = 0; i < spacing; i++) {
-          row += " ";
-        }
+    const middlePart = letter 
+      + " ".repeat(2*(letter.charCodeAt(0) - "A".charCodeAt(0)) - 1)
+      + letter + "\n";
 
-        row += String.fromCharCode(currentChar);
-      }
-
-      for(let i = 0; i < margin; i++) {
-        row += " ";
-      }
-
-      result.push(row);
-      if(currentChar === finalLetterChar) direction = -1;
-      currentChar += 1 * direction;
-      spacing += 2 * direction;
-    }
-
-    return result.join("\n") + "\n";
+    return topPart.join("\n") + "\n"
+      + middlePart
+      + [...topPart].reverse().join("\n") + "\n";
   }
 }
