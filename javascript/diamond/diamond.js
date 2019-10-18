@@ -1,64 +1,36 @@
 export class Diamond {
   makeDiamond(letter) {
+    const finalLetterChar = letter.charCodeAt(0);
+    let currentChar = "A".charCodeAt(0);
+    let spacing = -1;
+    let direction = 1;
+
     const result = new Array();
-    const asciiValue = letter.charCodeAt(0);
-    const difference = asciiValue - "A".charCodeAt(0);
-    let currentLetter = "A".charCodeAt(0);
-    let currentMargin = difference;
-    let currentSpacing = -1;
-
-    if(difference === 0) return "A\n";
-
-    while(currentLetter < asciiValue) {
+    while(currentChar > 64) {
       let row = "";
-      for(let i = 0; i < currentMargin; i++) {
+      let margin = finalLetterChar - currentChar;
+      for(let i = 0; i < margin; i++) {
         row += " ";
       }
 
-      row += String.fromCharCode(currentLetter);
+      row += String.fromCharCode(currentChar);
 
-      if(currentLetter > "A".charCodeAt(0)) {
-        for(let i = 0; i < currentSpacing; i++) {
+      if(currentChar !== 65) {
+        for(let i = 0; i < spacing; i++) {
           row += " ";
         }
 
-        row += String.fromCharCode(currentLetter);
+        row += String.fromCharCode(currentChar);
       }
 
-      for(let i = 0; i < currentMargin; i++) {
+      for(let i = 0; i < margin; i++) {
         row += " ";
       }
 
       result.push(row);
-      currentLetter += 1;
-      currentMargin -= 1;
-      currentSpacing += 2;
-    }
-    
-    while(currentLetter >= "A".charCodeAt(0)) {
-      let row = "";
-      for(let i = 0; i < currentMargin; i++) {
-        row += " ";
-      }
-
-      row += String.fromCharCode(currentLetter);
-
-      if(currentLetter > "A".charCodeAt(0)) {
-        for(let i = 0; i < currentSpacing; i++) {
-          row += " ";
-        }
-
-        row += String.fromCharCode(currentLetter);
-      }
-
-      for(let i = 0; i < currentMargin; i++) {
-        row += " ";
-      }
-
-      result.push(row);
-      currentLetter -= 1;
-      currentMargin += 1;
-      currentSpacing -= 2;
+      if(currentChar === finalLetterChar) direction = -1;
+      currentChar += 1 * direction;
+      spacing += 2 * direction;
     }
 
     return result.join("\n") + "\n";
