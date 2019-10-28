@@ -7,10 +7,6 @@ class Node {
 }
 
 export class LinkedList {
-  constructor() {
-    this.head = null;
-    this.tail = null;
-  }
 
   push(value) {
     const newNode = new Node(value, null, this.tail);
@@ -31,19 +27,20 @@ export class LinkedList {
     const firstElement = this.head;
     this.head = firstElement.next;
     if(this.head) this.head.prev = null;
+    if(!this.head) this.tail = null;
     return firstElement.value;
   }
 
   unshift(value) {
     const newNode = new Node(value, this.head, null);
     if(this.head) this.head.prev = newNode;
-    this.head = newNode;
     if(!this.tail) this.tail = newNode;
+    this.head = newNode;
   }
 
   delete(value) {
     let current = this.head;
-    while(current !== null) {
+    while(current) {
       if(current.value === value) {
         if(current.prev) { 
           current.prev.next = current.next;
@@ -58,7 +55,7 @@ export class LinkedList {
         } else {
           this.tail = current.prev;
         }
-        break;
+        return;
       }
 
       current = current.next;
@@ -68,7 +65,7 @@ export class LinkedList {
   count() {
     let current = this.head;
     let counter = 0;
-    while(current !== null) {
+    while(current) {
       counter += 1;
       current = current.next;
     }
