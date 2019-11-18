@@ -1,40 +1,39 @@
 class Node {
-  constructor(value, next, prev) {
-    this.value = value;
-    this.next = next;
-    this.prev = prev;
+  constructor(nodeProperties) {
+    this.value = nodeProperties.value || null;
+    this.next = nodeProperties.next || null;
+    this.prev = nodeProperties.prev || null;
   }
 }
 
 export class LinkedList {
-
   push(value) {
-    const newNode = new Node(value, null, this.tail);
-    if(!this.head) this.head = newNode;
-    if(this.tail) this.tail.next = newNode;
+    const newNode = new Node({ value: value, prev: this.tail });
+    if(!this.head) { this.head = newNode; }
+    if(this.tail) { this.tail.next = newNode; }
     this.tail = newNode;
   }
 
   pop() {
     const lastElement = this.tail;
     this.tail = lastElement.prev;
-    if(this.tail) this.tail.next = null;
-    if(!this.tail) this.head = null;
+    if(this.tail) { this.tail.next = null ; }
+    if(!this.tail) { this.head = null; }
     return lastElement.value;
   }
 
   shift() {
     const firstElement = this.head;
     this.head = firstElement.next;
-    if(this.head) this.head.prev = null;
-    if(!this.head) this.tail = null;
+    if(this.head) { this.head.prev = null; }
+    if(!this.head) { this.tail = null; }
     return firstElement.value;
   }
 
   unshift(value) {
-    const newNode = new Node(value, this.head, null);
-    if(this.head) this.head.prev = newNode;
-    if(!this.tail) this.tail = newNode;
+    const newNode = new Node({ value: value, next: this.head });
+    if(this.head) { this.head.prev = newNode; }
+    if(!this.tail) { this.tail = newNode; }
     this.head = newNode;
   }
 
