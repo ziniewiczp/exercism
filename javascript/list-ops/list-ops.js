@@ -5,66 +5,74 @@ export class List {
     }
 
     append(newList) {   
-        newList.values.forEach(item => {
-            this.values.push(item);
-        });
-
+        this.values = [...this.values, ...newList.values];
         return this;
     }
 
     concat(listOfLists) {
-        listOfLists.values.forEach(list => {
-            this.append(list);
-        });
+        let [head, ...tail] = listOfLists.values;
+        while(head) {
+            this.append(head);
+            [head, ...tail] = tail;
+        }
 
         return this;
     }
 
     filter(predicate) {
-        this.values.forEach((item, index) => {
-            if(!predicate(item)) { this.values.splice(index, 1); }
-        });
+        let [head, ...tail] = this.values;
+        this.values = new Array();
+
+        while(head) {
+            if(predicate(head)) { this.values.push(head); }
+            [head, ...tail] = tail;
+        }
 
         return this;
     }
 
     map(transformation) {
-        this.values.forEach((item, index) => {
-            this.values[index] = transformation(item);
-        });
+        let [head, ...tail] = this.values;
+        this.values = new Array();
+        
+        while(head) {
+            this.values.push(transformation(head));
+            [head, ...tail] = tail;
+        }
 
         return this;
     }
 
-    length() {
-        let counter = 0;
-        this.values.forEach(item => counter++);
-        return counter;
+    length(counter = 0, rest = this.values) {
+        const [head, ...tail] = rest;
+        return (head)
+            ? this.length(counter + 1, tail)
+            : counter;
     }
 
-    foldl(transformation, accumulator) {
-        this.values.forEach(item => {
-           accumulator = transformation(accumulator, item); 
-        });
-
-        return accumulator;
+    foldl(transformation, accumulator, rest = this.values) {
+        const [head, ...tail] = rest;
+        return (head) 
+            ? this.foldl(transformation, transformation(accumulator, head), tail) 
+            : accumulator;
     }
 
-    foldr(transformation, accumulator) {
-        for(let index = this.length() - 1; index >= 0; index--) {
-            accumulator = transformation(accumulator, this.values[index]);
-        }
-
-        return accumulator;
+    foldr(transformation, accumulator, rest = this.values) {
+        const last = rest.pop();
+        return (last) 
+            ? this.foldr(transformation, transformation(accumulator, last), rest) 
+            : accumulator;
     }
 
-    reverse() {
-        const reversedValues = new Array();
-        for(let index = this.length() - 1; index >= 0; index--) {
-            reversedValues.push(this.values[index]);
-        }
-
-        this.values = reversedValues;
+    reverse(temp = new Array()) {
+        const [head, ...tail] = this.values;
+        if(!head) { return this; }
+        
+        temp.push(head);
+        this.values = tail;
+        
+        this.reverse(tail, temp);
+        this.values.push(temp.pop());
         return this;
     }
 }
