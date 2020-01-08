@@ -33,15 +33,12 @@ const applyCipher = (text, key, mode) => {
 
   return text.split("").map((letter, index) => {
     const difference = ALPHABET.indexOf(key[index]) * mode;
-    let encodedIndex = ALPHABET.indexOf(letter) + difference;
-
-    if(encodedIndex > ALPHABET.length - 1) {
-      encodedIndex = difference - (ALPHABET.length - ALPHABET.indexOf(letter));
-    
-    } else if(encodedIndex < 0) {
-      encodedIndex = ALPHABET.length - Math.abs(encodedIndex);
-    }
-
+    const encodedIndex = mod(ALPHABET.indexOf(letter) + difference, ALPHABET.length);
     return ALPHABET[encodedIndex];
   }).join("");
+}
+
+const mod = (index, range) => {
+  const remainder = index % range;
+  return (remainder < 0) ? range + remainder : remainder;
 }
