@@ -1,3 +1,5 @@
+const ALPHABET = new Array(122 - 96).fill("a").map((_, index) => String.fromCharCode(index + 97));
+
 export class Cipher {
   constructor(key = generateKey()) {
     this.key = key;
@@ -17,10 +19,7 @@ const generateKey = () => {
   return key.map(_ => getRandomLetter()).join("");
 }
 
-const getRandomLetter = () => {
-  const ascii = Math.floor(Math.random() * (122 - 96)) + 97;
-  return String.fromCharCode(ascii);
-}
+const getRandomLetter = () => ALPHABET[Math.floor(Math.random() * ALPHABET.length)];
 
 const modes = {
   ENCODE: 1,
@@ -33,17 +32,16 @@ const applyCipher = (text, key, mode) => {
   }
 
   return text.split("").map((letter, index) => {
-    let difference = key[index].charCodeAt() - 97;
+    const difference = ALPHABET.indexOf(key[index]) * mode;
+    let encodedIndex = ALPHABET.indexOf(letter) + difference;
 
-    let encoded = letter.charCodeAt() + (difference * mode);
-    if(encoded > 122) {
-      encoded = 96 + (encoded - 122);
+    if(encodedIndex > ALPHABET.length - 1) {
+      encodedIndex = difference - (ALPHABET.length - ALPHABET.indexOf(letter));
+    
+    } else if(encodedIndex < 0) {
+      encodedIndex = ALPHABET.length - Math.abs(encodedIndex);
     }
 
-    if(encoded < 97) {
-      encoded = 123 - (97 - encoded);
-    }
-
-    return String.fromCharCode(encoded);
+    return ALPHABET[encodedIndex];
   }).join("");
 }
