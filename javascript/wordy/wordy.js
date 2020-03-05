@@ -7,7 +7,7 @@ class ArgumentError extends Error {
 
 class Wordy {
   constructor(question) {
-    const temp = question
+    this.expression = question
       .replace("What is ", "")
       .replace(/plus/g, "+")
       .replace(/minus/g, "-")
@@ -15,22 +15,43 @@ class Wordy {
       .replace(/divided by/g, "/")
       .replace("?", "")
       .split(" ");
+  }
 
-    if(temp.length > 3) {
-      temp.splice(0, 0, "(");
-      temp.splice(4, 0, ")");
+  calculate(a, b, operator) {
+    if(Number.isNaN(a) || Number.isNaN(b)) {
+      throw new ArgumentError("Provided parameter is not a number!");
     }
 
-    this.expression = temp.join(" ");
+    switch(operator) {
+      case "+":
+        return a + b;
+
+      case "-":
+        return a - b;
+
+      case "*":
+        return a * b;
+
+      case "/":
+        return a / b;
+
+      default:
+        throw new ArgumentError("Wrong operator!");
+    }
   }
 
   answer() {
-    try {
-      return eval(this.expression);
-    
-    } catch(e) {
-      throw new ArgumentError(e.message);
+    let result;
+    let temp = [...this.expression];
+    while(temp.length > 0) {
+      let a = (result) ? result : +temp.shift();
+      let operator = temp.shift();
+      let b = +temp.shift();
+
+      result = this.calculate(a, b, operator);
     }
+
+    return result;
   }
 }
 
